@@ -1,0 +1,375 @@
+/* Global Race Condition — Site Styles */
+
+:root {
+    --navy: #1a3a5c;
+    --dark-navy: #263751;
+    --gold: #c9a84c;
+    --text: #2d2d2d;
+    --heading: #1a1a2e;
+    --muted: #666666;
+    --light-muted: #888888;
+    --border: #e8e6e1;
+    --bg: #f9f8f6;
+    --bg-light: #f5f5f7;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    background-color: var(--bg);
+    line-height: 1.7;
+    font-size: 17px;
+}
+
+/* Navigation */
+nav {
+    background-color: var(--dark-navy);
+    padding: 0.75rem 2rem;
+    border-bottom: 2px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav .nav-brand {
+    color: var(--gold);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+nav a:hover,
+nav a.active {
+    color: var(--gold);
+}
+
+.external-icon {
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+
+/* Header / Masthead */
+header {
+    background-color: var(--dark-navy);
+    padding: 2rem 2rem 2.5rem;
+    text-align: center;
+    border-bottom: 3px solid var(--gold);
+}
+
+header .logo {
+    max-width: 500px;
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Container */
+.container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+}
+
+/* Brief header */
+.brief-meta {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.brief-meta .cadence-label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.brief-meta .brief-date {
+    font-size: 1.15rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+}
+
+.brief-meta .tagline {
+    font-style: italic;
+    color: var(--light-muted);
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.brief-meta .sources-line {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+    color: var(--light-muted);
+    margin-top: 0.75rem;
+}
+
+/* Companion format bar */
+.format-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+.format-bar a {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.85rem;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.format-bar a:hover {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}
+
+/* Brief body */
+.brief-body h1 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--heading);
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 0.3rem;
+    margin: 2rem 0 1rem;
+}
+
+.brief-body h2 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--heading);
+    font-size: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.25rem;
+    margin: 1.75rem 0 0.75rem;
+}
+
+.brief-body h3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--heading);
+    font-size: 1.1rem;
+    margin: 1.5rem 0 0.5rem;
+}
+
+.brief-body p {
+    margin-bottom: 1rem;
+}
+
+.brief-body hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+.brief-body blockquote {
+    border-left: 3px solid var(--gold);
+    margin: 1.25rem 0;
+    padding: 0.75rem 1.25rem;
+    color: var(--muted);
+    background: var(--bg-light);
+    border-radius: 0 4px 4px 0;
+}
+
+.brief-body em {
+    color: var(--muted);
+}
+
+.brief-body a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.brief-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.brief-body th {
+    background: var(--bg-light);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+}
+
+.brief-body td {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--border);
+}
+
+.brief-body ul, .brief-body ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.brief-body li {
+    margin-bottom: 0.4rem;
+}
+
+.brief-body strong {
+    color: var(--heading);
+}
+
+/* Footer */
+.site-footer {
+    background: var(--dark-navy);
+    color: rgba(255,255,255,0.6);
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.site-footer a {
+    color: var(--gold);
+    text-decoration: none;
+}
+
+.site-footer .advisory-cta {
+    margin-top: 1rem;
+    font-style: italic;
+    color: rgba(255,255,255,0.45);
+    font-size: 0.75rem;
+}
+
+/* Recent briefs list on index */
+.recent-briefs {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border);
+}
+
+.recent-briefs h2 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1.1rem;
+    color: var(--heading);
+    margin-bottom: 1rem;
+}
+
+.recent-briefs .brief-card {
+    display: block;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.recent-briefs .brief-card:hover {
+    border-color: var(--navy);
+    box-shadow: 0 2px 8px rgba(26,58,92,0.08);
+}
+
+.recent-briefs .brief-card .card-date {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.recent-briefs .brief-card .card-title {
+    font-size: 1rem;
+    margin-top: 0.25rem;
+    color: var(--heading);
+}
+
+/* RSS link */
+.rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+    color: var(--navy);
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.rss-link:hover {
+    color: var(--gold);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    nav .nav-inner {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    nav ul {
+        gap: 1rem;
+        justify-content: center;
+    }
+    header {
+        padding: 1.5rem 1rem 2rem;
+    }
+    header .logo {
+        max-width: 320px;
+    }
+    .container {
+        padding: 1.5rem 1rem;
+    }
+    .format-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    .format-bar a {
+        text-align: center;
+    }
+}
