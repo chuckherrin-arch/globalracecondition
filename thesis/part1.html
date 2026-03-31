@@ -592,6 +592,71 @@
 </style>
 </head>
 <body>
+<!-- grc-site-nav-injected -->
+<style>
+.grc-site-nav {
+    background: #1a3a5c;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    border-bottom: 2px solid #c9a84c;
+}
+.grc-site-nav .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+}
+.grc-site-nav .nav-brand {
+    color: #c9a84c;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.75rem 0;
+    white-space: nowrap;
+}
+.grc-site-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+}
+.grc-site-nav li a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.75rem 0.9rem;
+    display: block;
+    transition: color 0.15s;
+}
+.grc-site-nav li a:hover { color: #fff; }
+.grc-site-nav li a.active { color: #c9a84c; }
+.grc-site-nav .external-icon { font-size: 0.7em; }
+@media (max-width: 768px) {
+    .grc-site-nav .nav-inner { flex-wrap: wrap; }
+    .grc-site-nav ul { flex-wrap: wrap; }
+    .grc-site-nav li a { padding: 0.5rem 0.6rem; font-size: 0.72rem; }
+}
+</style>
+
+<div class="grc-site-nav">
+    <div class="nav-inner">
+        <a href="/" class="nav-brand">Herrin Advisory, LLC</a>
+        <ul>
+            <li><a href="/">Today's Brief</a></li>
+            <li><a href="/archive/">Archive</a></li>
+            <li><a href="/thesis/" class="active">The Thesis</a></li>
+            <li><a href="/advisory-speaking/">Advisory &amp; Speaking</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="https://fullstackhuman.com" target="_blank">Full Stack Human <span class="external-icon">&#8599;</span></a></li>
+        </ul>
+    </div>
+</div>
+<!-- grc-site-nav-injected -->
 <header class="site-header">
     <h1>PARENTING A YOUNG GOD</h1>
     <div class="subtitle">Surviving Humanity's Technological Adolescence</div>
@@ -599,7 +664,7 @@
     <div class="subtitle" style="margin-top:4px;font-size:0.9em;color:#c0c0d8;font-weight:600;">Nobody Has to Lose, or We All Do.</div>
     <div class="author">By Chuck Herrin &middot; chuck at globalracecondition.com</div>
 </header>
-<nav class="page-nav"><div class="pn-inner"><a href="index.html">Overview &amp; Thesis</a><a href="part1.html" class="pn-active">Part I: Problem</a><a href="part2.html">Part II: History</a><a href="part3.html">Part III: Architecture</a><a href="part4.html">Part IV: Fractals</a><a href="part5.html">Part V: Raising AI</a><a href="part5.html#references">References</a></div></nav>
+<nav class="page-nav"><div class="pn-inner"><a href="index.html">Overview &amp; Thesis</a><a href="part1.html" class="pn-active">Part I: Problem</a><a href="part2.html">Part II: History</a><a href="part3.html">Part III: Architecture</a><a href="part4.html">Part IV: Fractals</a><a href="part5.html">Part V: Raising AI</a></div></nav>
 <div class="container">
 
     <article>
