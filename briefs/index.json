@@ -1,5 +1,29 @@
 [
   {
+    "date": "2026-04-03",
+    "cadence": "morning",
+    "cadence_label": "The Week Behind",
+    "top_story": "An F-15 Goes Down Over Iran",
+    "sources_line": "Today's sources analyzed: 131 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing",
+    "published_at": "2026-04-03T10:39:11.006177"
+  },
+  {
+    "date": "2026-04-02",
+    "cadence": "midweek",
+    "cadence_label": "The Deep Dive",
+    "top_story": "Liberation Day +1: The Tariff Architecture Reveals Its Shape",
+    "sources_line": "Today's sources analyzed: 124 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing",
+    "published_at": "2026-04-03T10:39:10.455807"
+  },
+  {
+    "date": "2026-03-31",
+    "cadence": "morning",
+    "cadence_label": "The Week Ahead",
+    "top_story": "Iran War Week 5: The Escalation Ladder Has No Visible Top",
+    "sources_line": "Today's sources analyzed: 118 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing",
+    "published_at": "2026-04-03T10:39:09.899037"
+  },
+  {
     "date": "2026-03-30",
     "cadence": "morning",
     "top_story": "Iran War: The Hormuz Endgame",
@@ -7,17 +31,17 @@
     "published_at": "2026-03-30T19:53:56.624356"
   },
   {
-    "date": "2026-03-26",
-    "cadence": "morning",
-    "top_story": "The Iran War's Negotiation Theater",
-    "sources_line": "Sources analyzed: 178 of 186 collected | Domains: ai_technology, consciousness_behavior, cybersecurity, general, geopolitics_geoeconomics, macro_finance, quantum_computing",
-    "published_at": "2026-03-30T17:40:51.265138"
-  },
-  {
     "date": "2026-03-27",
     "cadence": "morning",
     "top_story": "The Deal That Isn't: Iran's 10-Day Reprieve and the Negotiation Theater",
     "sources_line": "Sources analyzed: 133 | Domains: ai_technology, consciousness_behavior, cybersecurity, general, geopolitics_geoeconomics, quantum_computing",
     "published_at": "2026-03-30T17:39:27.220450"
+  },
+  {
+    "date": "2026-03-26",
+    "cadence": "morning",
+    "top_story": "The Iran War's Negotiation Theater",
+    "sources_line": "Sources analyzed: 178 of 186 collected | Domains: ai_technology, consciousness_behavior, cybersecurity, general, geopolitics_geoeconomics, macro_finance, quantum_computing",
+    "published_at": "2026-03-30T17:40:51.265138"
   }
 ]
