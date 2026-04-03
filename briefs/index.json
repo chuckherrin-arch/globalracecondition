@@ -1,6 +1,13 @@
 [
   {
     "date": "2026-04-03",
+    "cadence": "evening",
+    "top_story": "1. WHAT MOVED TODAY",
+    "sources_line": "",
+    "published_at": "2026-04-03T14:36:48.175134"
+  },
+  {
+    "date": "2026-04-03",
     "cadence": "morning",
     "cadence_label": "The Week Behind",
     "top_story": "An F-15 Goes Down Over Iran",
