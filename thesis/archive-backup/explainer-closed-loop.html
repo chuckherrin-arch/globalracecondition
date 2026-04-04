@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero-Sum Collapse: The Closed Loop</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: Georgia, serif;
+        background: #0a0a1a;
+        color: #e0e0e0;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 24px;
+    }
+    h1 {
+        text-align: center;
+        font-size: 1.8em;
+        margin-bottom: 8px;
+        color: #fff;
+    }
+    .subtitle {
+        text-align: center;
+        font-style: italic;
+        color: #8888aa;
+        margin-bottom: 40px;
+        font-size: 1.05em;
+    }
+    .scene {
+        position: relative;
+        width: 100%;
+        max-width: 700px;
+        height: 500px;
+        margin: 0 auto 30px;
+    }
+    canvas {
+        display: block;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+    .controls {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .controls button {
+        background: #2c5f8a;
+        color: #fff;
+        border: none;
+        padding: 12px 28px;
+        font-size: 1em;
+        font-family: Georgia, serif;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 8px;
+        transition: background 0.2s;
+    }
+    .controls button:hover { background: #3a7ab5; }
+    .controls button.active { background: #c0392b; }
+    .narration {
+        text-align: center;
+        font-size: 1.1em;
+        line-height: 1.6;
+        min-height: 80px;
+        padding: 20px;
+        color: #ccc;
+        max-width: 650px;
+        margin: 0 auto;
+    }
+    .narration em { color: #6fa8dc; }
+    .phase-indicator {
+        text-align: center;
+        font-size: 0.85em;
+        color: #666;
+        margin-top: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    .comparison {
+        display: flex;
+        gap: 40px;
+        margin-top: 50px;
+        justify-content: center;
+    }
+    .comparison .panel {
+        flex: 1;
+        max-width: 320px;
+        text-align: center;
+    }
+    .comparison h3 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    .comparison .panel:first-child h3 { color: #c0392b; }
+    .comparison .panel:last-child h3 { color: #27ae60; }
+    .comparison canvas {
+        border: 1px solid #333;
+        border-radius: 6px;
+    }
+    .footer-note {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 0.9em;
+        color: #666;
+        font-style: italic;
+    }
+    .footer-note a { color: #6fa8dc; }
+    .analogy {
+        max-width: 650px;
+        margin: 0 auto 30px;
+        font-size: 1.02em;
+        line-height: 1.7;
+        color: #bbb;
+    }
+    .analogy strong { color: #e0e0e0; }
+    .analogy p { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>The Closed Loop</h1>
+    <p class="subtitle">How zero-sum thinking consumes a system from within</p>
+
+    <div class="analogy">
+    <p><strong>Here's an analogy:</strong></p>
+    <p>Imagine a closed-loop system that continually grows in power. But rather than a virtuous cycle of self-improvement, half of the power gets rerouted back inward — towards the middle of the system. This energy routed inward against itself is what happens in a win/lose dynamic.</p>
+    <p>The circle grows, but part of the growth is like a donut expanding from within — stretching apart like a cell undergoing mitosis. Two halves form, each growing, each pulling away from the other.</p>
+    <p>But because it's a closed-loop system, it's bound by constraints. Eventually the energy imbalance reaches a breaking point, forcing both sides to slam back together — like dueling armies racing toward each other on a battlefield.</p>
+    <p>When this happens, the two halves fight each other. One wins. The circle is bigger than when it started, but it's spent a tremendous amount of energy on this internal conflict. Then contrast that with a virtuous cycle — win/win — where the system expands together through recursive improvement.</p>
+    </div>
+
+    <div class="scene">
+        <canvas id="mainCanvas" width="700" height="500"></canvas>
+    </div>
+
+    <div class="phase-indicator" id="phaseLabel">PHASE 1 OF 6</div>
+
+    <div class="narration" id="narration">
+        Press <strong>Play</strong> to begin the demonstration.
+    </div>
+
+    <div class="controls">
+        <button id="playBtn" onclick="startAnimation()">Play</button>
+        <button id="resetBtn" onclick="resetAnimation()">Reset</button>
+    </div>
+
+    <div class="comparison" style="margin-top:60px">
+        <div class="panel">
+            <h3>Zero-Sum (Closed Loop)</h3>
+            <canvas id="zeroCanvas" width="280" height="280"></canvas>
+            <p style="margin-top:10px;font-size:0.9em;color:#999">Energy turns inward. Growth becomes conflict. The system fights itself.</p>
+        </div>
+        <div class="panel">
+            <h3>Positive-Sum (Virtuous Cycle)</h3>
+            <canvas id="posCanvas" width="280" height="280"></canvas>
+            <p style="margin-top:10px;font-size:0.9em;color:#999">Energy flows outward. Growth compounds. The system expands together.</p>
+        </div>
+    </div>
+
+    <p class="footer-note">
+        A companion piece to <a href="https://globalracecondition.com">Parenting a Young God</a> by Chuck Herrin
+    </p>
+</div>
+
+<script>
+// ========== MAIN ANIMATION ==========
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+const narrationEl = document.getElementById('narration');
+const phaseLabel = document.getElementById('phaseLabel');
+
+let animFrame = null;
+let phase = 0;
+let t = 0;
+let running = false;
+
+const phases = [
+    {
+        duration: 180,
+        label: "PHASE 1 OF 6 — UNITY",
+        narration: "A closed system. Energy flows in a loop. <em>Growing, unified, powerful.</em>"
+    },
+    {
+        duration: 240,
+        label: "PHASE 2 OF 6 — DIVISION",
+        narration: "But half the energy turns inward. The system begins to split. <em>Two identities form within one body.</em>"
+    },
+    {
+        duration: 300,
+        label: "PHASE 3 OF 6 — EXPANSION",
+        narration: "Both halves grow — like mitosis. <em>But they're still bound by the same constraints.</em> The loop stretches, deforms."
+    },
+    {
+        duration: 240,
+        label: "PHASE 4 OF 6 — TENSION",
+        narration: "The energy imbalance reaches a breaking point. <em>The two halves are pulled back toward each other like armies on a battlefield.</em>"
+    },
+    {
+        duration: 180,
+        label: "PHASE 5 OF 6 — COLLISION",
+        narration: "They slam together. <em>One wins.</em> The circle reforms — bigger than before, but depleted. Tremendous energy wasted on internal war."
+    },
+    {
+        duration: 200,
+        label: "PHASE 6 OF 6 — AFTERMATH",
+        narration: "The system survives, but scarred. It used its own strength against itself. <em>This is zero-sum thinking at civilizational scale.</em>"
+    }
+];
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+function drawSystem(ctx, w, h, phase, progress) {
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2;
+    const cy = h / 2;
+
+    // Background glow
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 300);
+    grad.addColorStop(0, 'rgba(44, 95, 138, 0.1)');
+    grad.addColorStop(1, 'rgba(10, 10, 26, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    if (phase === 0) {
+        // Unified circle, growing
+        const r = lerp(60, 90, progress);
+        drawUnifiedCircle(ctx, cx, cy, r, progress);
+        drawEnergyParticles(ctx, cx, cy, r, progress, 0);
+    }
+    else if (phase === 1) {
+        // Beginning to split - figure 8 forming
+        const r = lerp(90, 100, progress);
+        const sep = lerp(0, 30, easeInOut(progress));
+        drawSplittingSystem(ctx, cx, cy, r, sep, progress);
+    }
+    else if (phase === 2) {
+        // Full mitosis - two lobes expanding
+        const r = lerp(100, 120, progress);
+        const sep = lerp(30, 90, easeInOut(progress));
+        drawSplittingSystem(ctx, cx, cy, r, sep, progress);
+    }
+    else if (phase === 3) {
+        // Tension - pulling back
+        const r = lerp(120, 110, progress);
+        const sep = lerp(90, 40, easeInOut(progress));
+        drawSplittingSystem(ctx, cx, cy, r, sep, progress, true);
+    }
+    else if (phase === 4) {
+        // Collision
+        const r = lerp(110, 130, easeInOut(progress));
+        const sep = lerp(40, 0, easeInOut(Math.min(1, progress * 1.5)));
+        drawCollision(ctx, cx, cy, r, sep, progress);
+    }
+    else if (phase === 5) {
+        // Aftermath - scarred circle
+        const r = lerp(130, 125, progress);
+        drawAftermath(ctx, cx, cy, r, progress);
+    }
+}
+
+function drawUnifiedCircle(ctx, cx, cy, r, t) {
+    // Outer glow
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + 15, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(44, 95, 138, 0.3)';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    // Main circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grad.addColorStop(0, 'rgba(100, 160, 220, 0.4)');
+    grad.addColorStop(1, 'rgba(44, 95, 138, 0.2)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = '#6fa8dc';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Energy flow arrows around circumference
+    const numArrows = 8;
+    for (let i = 0; i < numArrows; i++) {
+        const angle = (i / numArrows) * Math.PI * 2 + t * 3;
+        const ax = cx + Math.cos(angle) * (r + 4);
+        const ay = cy + Math.sin(angle) * (r + 4);
+        const size = 6;
+        const dir = angle + Math.PI / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(ax + Math.cos(dir) * size, ay + Math.sin(dir) * size);
+        ctx.lineTo(ax + Math.cos(dir + 2.5) * size * 0.6, ay + Math.sin(dir + 2.5) * size * 0.6);
+        ctx.lineTo(ax + Math.cos(dir - 2.5) * size * 0.6, ay + Math.sin(dir - 2.5) * size * 0.6);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(111, 168, 220, ${0.4 + 0.3 * Math.sin(t * 5 + i)})`;
+        ctx.fill();
+    }
+
+    // Power label
+    const power = Math.floor(lerp(100, 150, t));
+    ctx.fillStyle = '#fff';
+    ctx.font = '14px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Power: ${power}`, cx, cy + 4);
+}
+
+function drawSplittingSystem(ctx, cx, cy, r, sep, t, tension) {
+    const leftX = cx - sep;
+    const rightX = cx + sep;
+    const lobeR = r * 0.65;
+
+    // Constraint boundary (the closed loop)
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, r + sep * 0.3, r * 0.85, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(200, 200, 200, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Connection between lobes (figure-8 neck)
+    if (sep > 10) {
+        ctx.beginPath();
+        ctx.moveTo(leftX + lobeR * 0.7, cy - lobeR * 0.3);
+        ctx.quadraticCurveTo(cx, cy, rightX - lobeR * 0.7, cy - lobeR * 0.3);
+        ctx.moveTo(leftX + lobeR * 0.7, cy + lobeR * 0.3);
+        ctx.quadraticCurveTo(cx, cy, rightX - lobeR * 0.7, cy + lobeR * 0.3);
+        ctx.strokeStyle = tension ? 'rgba(192, 57, 43, 0.4)' : 'rgba(111, 168, 220, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Left lobe
+    ctx.beginPath();
+    ctx.arc(leftX, cy, lobeR, 0, Math.PI * 2);
+    let grad = ctx.createRadialGradient(leftX, cy, 0, leftX, cy, lobeR);
+    grad.addColorStop(0, 'rgba(192, 57, 43, 0.3)');
+    grad.addColorStop(1, 'rgba(192, 57, 43, 0.1)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = tension ? '#c0392b' : '#e74c3c';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Right lobe
+    ctx.beginPath();
+    ctx.arc(rightX, cy, lobeR, 0, Math.PI * 2);
+    grad = ctx.createRadialGradient(rightX, cy, 0, rightX, cy, lobeR);
+    grad.addColorStop(0, 'rgba(41, 128, 185, 0.3)');
+    grad.addColorStop(1, 'rgba(41, 128, 185, 0.1)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = tension ? '#2980b9' : '#3498db';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Internal conflict arrows
+    if (sep > 20) {
+        const numBolts = Math.floor(sep / 15);
+        for (let i = 0; i < numBolts; i++) {
+            const bx = lerp(leftX + lobeR * 0.5, rightX - lobeR * 0.5, (i + 0.5) / numBolts);
+            const by = cy + Math.sin(t * 8 + i * 2) * 15;
+            const intensity = tension ? 0.8 : 0.4;
+
+            ctx.beginPath();
+            ctx.moveTo(bx - 8, by - 5);
+            ctx.lineTo(bx, by);
+            ctx.lineTo(bx - 4, by);
+            ctx.lineTo(bx + 8, by + 5);
+            ctx.strokeStyle = `rgba(255, 200, 50, ${intensity * (0.5 + 0.5 * Math.sin(t * 12 + i))})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+
+    // Labels
+    ctx.font = '13px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#e74c3c';
+    ctx.fillText('"Us"', leftX, cy + 4);
+    ctx.fillStyle = '#3498db';
+    ctx.fillText('"Them"', rightX, cy + 4);
+
+    // Tension arrows if pulling back
+    if (tension) {
+        // Left arrow pointing right
+        drawArrow(ctx, leftX + lobeR + 15, cy, rightX - lobeR - 15, cy, '#c0392b');
+        // Right arrow pointing left
+        drawArrow(ctx, rightX - lobeR - 15, cy, leftX + lobeR + 15, cy, '#2980b9');
+    }
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color) {
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const len = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - 10 * Math.cos(angle - 0.4), y2 - 10 * Math.sin(angle - 0.4));
+    ctx.lineTo(x2 - 10 * Math.cos(angle + 0.4), y2 - 10 * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+}
+
+function drawCollision(ctx, cx, cy, r, sep, t) {
+    if (t < 0.7) {
+        drawSplittingSystem(ctx, cx, cy, r * 0.9, sep, t, true);
+    }
+
+    // Impact flash
+    if (t > 0.5 && t < 0.9) {
+        const flash = Math.sin((t - 0.5) * Math.PI / 0.4);
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 0.5 * flash, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 220, 100, ${flash * 0.6})`;
+        ctx.fill();
+
+        // Debris particles
+        for (let i = 0; i < 12; i++) {
+            const angle = (i / 12) * Math.PI * 2 + t * 2;
+            const dist = r * 0.3 * flash + Math.random() * 20;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * dist;
+            ctx.beginPath();
+            ctx.arc(px, py, 2 + Math.random() * 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, ${150 + Math.random()*100}, 50, ${flash * 0.5})`;
+            ctx.fill();
+        }
+    }
+
+    // Reforming circle
+    if (t > 0.7) {
+        const reform = (t - 0.7) / 0.3;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        grad.addColorStop(0, `rgba(150, 100, 80, ${reform * 0.3})`);
+        grad.addColorStop(1, `rgba(100, 60, 40, ${reform * 0.15})`);
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(180, 130, 90, ${reform * 0.8})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+}
+
+function drawAftermath(ctx, cx, cy, r, t) {
+    // Scarred circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grad.addColorStop(0, 'rgba(150, 100, 80, 0.3)');
+    grad.addColorStop(1, 'rgba(80, 50, 30, 0.15)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = '#b08060';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Scars / cracks
+    for (let i = 0; i < 5; i++) {
+        const angle = (i / 5) * Math.PI * 2 + 0.3;
+        const innerR = r * 0.3;
+        const outerR = r * (0.7 + Math.random() * 0.25);
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * innerR, cy + Math.sin(angle) * innerR);
+        const midAngle = angle + (Math.random() - 0.5) * 0.3;
+        ctx.quadraticCurveTo(
+            cx + Math.cos(midAngle) * r * 0.5,
+            cy + Math.sin(midAngle) * r * 0.5,
+            cx + Math.cos(angle + 0.1) * outerR,
+            cy + Math.sin(angle + 0.1) * outerR
+        );
+        ctx.strokeStyle = `rgba(192, 57, 43, ${0.2 + t * 0.3})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    }
+
+    // Depleted energy - dim, slow particles
+    for (let i = 0; i < 4; i++) {
+        const angle = t * 1.5 + (i / 4) * Math.PI * 2;
+        const px = cx + Math.cos(angle) * (r + 8);
+        const py = cy + Math.sin(angle) * (r + 8);
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180, 130, 90, ${0.3 + 0.2 * Math.sin(t * 3 + i)})`;
+        ctx.fill();
+    }
+
+    // Labels
+    ctx.font = '14px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#b08060';
+    ctx.fillText('Bigger. Scarred. Depleted.', cx, cy - 10);
+    const power = Math.floor(lerp(150, 110, t));
+    ctx.fillStyle = '#999';
+    ctx.font = '12px Georgia';
+    ctx.fillText(`Power: ${power} (started at 100)`, cx, cy + 12);
+    ctx.fillText(`Energy wasted on internal conflict: ~${Math.floor(lerp(0, 40, t))}`, cx, cy + 30);
+}
+
+function drawEnergyParticles(ctx, cx, cy, r, t, mode) {
+    const num = 12;
+    for (let i = 0; i < num; i++) {
+        const angle = (i / num) * Math.PI * 2 + t * 3;
+        const px = cx + Math.cos(angle) * (r * 0.7);
+        const py = cy + Math.sin(angle) * (r * 0.7);
+        const brightness = 0.4 + 0.3 * Math.sin(t * 6 + i);
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(111, 168, 220, ${brightness})`;
+        ctx.fill();
+    }
+}
+
+function animate() {
+    if (!running) return;
+
+    const currentPhase = phases[phase];
+    const progress = Math.min(1, t / currentPhase.duration);
+
+    drawSystem(ctx, canvas.width, canvas.height, phase, progress);
+
+    t++;
+    if (t >= currentPhase.duration) {
+        t = 0;
+        phase++;
+        if (phase >= phases.length) {
+            running = false;
+            document.getElementById('playBtn').textContent = 'Replay';
+            return;
+        }
+        narrationEl.innerHTML = phases[phase].narration;
+        phaseLabel.textContent = phases[phase].label;
+    }
+
+    animFrame = requestAnimationFrame(animate);
+}
+
+function startAnimation() {
+    if (phase >= phases.length) {
+        resetAnimation();
+    }
+    running = true;
+    narrationEl.innerHTML = phases[phase].narration;
+    phaseLabel.textContent = phases[phase].label;
+    document.getElementById('playBtn').textContent = 'Playing...';
+    document.getElementById('playBtn').classList.add('active');
+    animate();
+}
+
+function resetAnimation() {
+    running = false;
+    if (animFrame) cancelAnimationFrame(animFrame);
+    phase = 0;
+    t = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    narrationEl.innerHTML = 'Press <strong>Play</strong> to begin the demonstration.';
+    phaseLabel.textContent = 'PHASE 1 OF 6';
+    document.getElementById('playBtn').textContent = 'Play';
+    document.getElementById('playBtn').classList.remove('active');
+    drawSystem(ctx, canvas.width, canvas.height, 0, 0);
+}
+
+// ========== COMPARISON ANIMATIONS ==========
+const zeroCanvas = document.getElementById('zeroCanvas');
+const zeroCtx = zeroCanvas.getContext('2d');
+const posCanvas = document.getElementById('posCanvas');
+const posCtx = posCanvas.getContext('2d');
+
+let compT = 0;
+function animateComparison() {
+    compT += 0.008;
+
+    const zw = zeroCanvas.width, zh = zeroCanvas.height;
+    const pw = posCanvas.width, ph = posCanvas.height;
+    const zcx = zw/2, zcy = zh/2;
+    const pcx = pw/2, pcy = ph/2;
+
+    // Zero-sum: pulsing, splitting, reforming cycle
+    zeroCtx.clearRect(0, 0, zw, zh);
+    const cycle = compT % 4;
+    const baseR = 40;
+
+    if (cycle < 1.5) {
+        // Splitting
+        const sep = cycle / 1.5 * 35;
+        const lr = baseR * 0.55;
+        zeroCtx.beginPath();
+        zeroCtx.arc(zcx - sep, zcy, lr, 0, Math.PI * 2);
+        zeroCtx.fillStyle = 'rgba(192, 57, 43, 0.25)';
+        zeroCtx.fill();
+        zeroCtx.strokeStyle = '#c0392b';
+        zeroCtx.lineWidth = 1.5;
+        zeroCtx.stroke();
+
+        zeroCtx.beginPath();
+        zeroCtx.arc(zcx + sep, zcy, lr, 0, Math.PI * 2);
+        zeroCtx.fillStyle = 'rgba(41, 128, 185, 0.25)';
+        zeroCtx.fill();
+        zeroCtx.strokeStyle = '#2980b9';
+        zeroCtx.lineWidth = 1.5;
+        zeroCtx.stroke();
+
+        // Conflict sparks
+        if (sep > 15) {
+            for (let i = 0; i < 3; i++) {
+                const sx = zcx + (Math.random() - 0.5) * sep;
+                const sy = zcy + (Math.random() - 0.5) * 20;
+                zeroCtx.beginPath();
+                zeroCtx.arc(sx, sy, 2, 0, Math.PI * 2);
+                zeroCtx.fillStyle = 'rgba(255, 200, 50, 0.6)';
+                zeroCtx.fill();
+            }
+        }
+    } else if (cycle < 2.5) {
+        // Collision
+        const flash = Math.sin((cycle - 1.5) * Math.PI);
+        zeroCtx.beginPath();
+        zeroCtx.arc(zcx, zcy, baseR + 10, 0, Math.PI * 2);
+        zeroCtx.fillStyle = `rgba(255, 200, 100, ${flash * 0.3})`;
+        zeroCtx.fill();
+    } else {
+        // Scarred reform
+        const reform = (cycle - 2.5) / 1.5;
+        zeroCtx.beginPath();
+        zeroCtx.arc(zcx, zcy, baseR + 5, 0, Math.PI * 2);
+        zeroCtx.fillStyle = 'rgba(150, 100, 80, 0.2)';
+        zeroCtx.fill();
+        zeroCtx.strokeStyle = `rgba(180, 130, 90, ${reform})`;
+        zeroCtx.lineWidth = 1.5;
+        zeroCtx.stroke();
+    }
+
+    // Label
+    zeroCtx.font = '11px Georgia';
+    zeroCtx.textAlign = 'center';
+    zeroCtx.fillStyle = '#999';
+    zeroCtx.fillText('Repeat cycle. Grow. Split. Fight. Deplete.', zcx, zh - 15);
+
+    // Positive-sum: expanding harmonious circles
+    posCtx.clearRect(0, 0, pw, ph);
+    const rings = 3 + Math.floor(compT % 3);
+    for (let i = rings; i >= 0; i--) {
+        const ringR = 20 + i * 22 + Math.sin(compT * 2) * 3;
+        const alpha = 0.15 - i * 0.02;
+        posCtx.beginPath();
+        posCtx.arc(pcx, pcy, ringR, 0, Math.PI * 2);
+        posCtx.fillStyle = `rgba(39, 174, 96, ${Math.max(0.03, alpha)})`;
+        posCtx.fill();
+        posCtx.strokeStyle = `rgba(39, 174, 96, ${0.3 + 0.1 * Math.sin(compT * 3 + i)})`;
+        posCtx.lineWidth = 1.5;
+        posCtx.stroke();
+    }
+
+    // Outward flowing particles
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2 + compT * 1.5;
+        const dist = 30 + ((compT * 40 + i * 20) % 90);
+        const px = pcx + Math.cos(angle) * dist;
+        const py = pcy + Math.sin(angle) * dist;
+        posCtx.beginPath();
+        posCtx.arc(px, py, 2.5, 0, Math.PI * 2);
+        posCtx.fillStyle = `rgba(39, 174, 96, ${0.6 - dist/200})`;
+        posCtx.fill();
+    }
+
+    posCtx.font = '11px Georgia';
+    posCtx.textAlign = 'center';
+    posCtx.fillStyle = '#999';
+    posCtx.fillText('Expand together. Compound gains.', pcx, ph - 15);
+
+    requestAnimationFrame(animateComparison);
+}
+
+// Initial draw
+drawSystem(ctx, canvas.width, canvas.height, 0, 0);
+animateComparison();
+</script>
+
+</body>
+</html>
