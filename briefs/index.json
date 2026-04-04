@@ -1,11 +1,19 @@
 [
   {
+    "date": "2026-04-04",
+    "cadence": "weekly",
+    "cadence_label": "Week in Review",
+    "top_story": "The Coercive Model Failed, and Everyone Knows It",
+    "sources_line": "This week's sources analyzed: approximately 775 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing, consciousness & behavior, macro & finance, eschatological & religious",
+    "published_at": "2026-04-04T22:52:54.065633"
+  },
+  {
     "date": "2026-04-03",
     "cadence": "morning",
     "cadence_label": "The Week Behind",
     "top_story": "An F-15 Goes Down Over Iran",
     "sources_line": "Today's sources analyzed: 131 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing",
-    "published_at": "2026-04-03T10:39:11.006177"
+    "published_at": "2026-04-03T11:50:20.325055"
   },
   {
     "date": "2026-04-02",
@@ -13,7 +21,7 @@
     "cadence_label": "The Deep Dive",
     "top_story": "Liberation Day +1: The Tariff Architecture Reveals Its Shape",
     "sources_line": "Today's sources analyzed: 124 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing",
-    "published_at": "2026-04-03T10:39:10.455807"
+    "published_at": "2026-04-03T11:50:19.772927"
   },
   {
     "date": "2026-03-31",
@@ -21,7 +29,7 @@
     "cadence_label": "The Week Ahead",
     "top_story": "Iran War Week 5: The Escalation Ladder Has No Visible Top",
     "sources_line": "Today's sources analyzed: 118 across AI & technology, cybersecurity, geopolitics & geoeconomics, quantum computing",
-    "published_at": "2026-04-03T10:39:09.899037"
+    "published_at": "2026-04-03T11:50:19.212604"
   },
   {
     "date": "2026-03-30",
